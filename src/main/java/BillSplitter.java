@@ -30,7 +30,6 @@ public class BillSplitter {
         String commandText;
         String productName;
         Double productPrice;
-
         Scanner scanner = new Scanner(System.in);
         scanner.useLocale(Locale.US);
 
