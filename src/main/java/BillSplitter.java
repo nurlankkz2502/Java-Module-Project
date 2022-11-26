@@ -4,29 +4,24 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class BillSplitter {
-    double totalAmount;
+    double totalAmount = 0;
     int personCount;
 
-    List<Product> productList;
+    List<Product> productList = new Vector<>();
 
     BillSplitter(int count) {
-        totalAmount = 0;
         personCount = count;
-        productList = new Vector<>();
     }
 
     public String checkDouble(Double value) {
-        double d = value % 1;
-        double integralPart = value - d;
-        String result;
-        if (integralPart < 2) {
-            result = String.format("%.2f", value) + " рубль";
-        } else if (integralPart < 10) {
-            result = String.format("%.2f", value) + " рубля";
-        } else {
-            result = String.format("%.2f", value) + " рублей";
-        }
-
+        double d = value % 10;
+        String result = String.format("%.2f", value);
+            if (d==1)
+                result+=" рубль";
+            else if(d==2||d==3||d==4)
+                result+=" рубля";
+            else
+                result+=" рублей";
         return result;
     }
 
@@ -43,15 +38,24 @@ public class BillSplitter {
 
             System.out.print("Введите название товара: ");
             productName = scanner.nextLine();
+
             System.out.print("Введите стоимость в формате: \"'рубли.копейки' [10.45, 11.40]\": ");
-            productPrice = scanner.nextDouble();
-
-            productList.add(new Product(productName, productPrice));
-
-            totalAmount = totalAmount + productPrice;
-
-            System.out.println("Продукт " + productName + " был добавлен");
-            System.out.println("Вы хотите добавить еще один товар?");
+            if (scanner.hasNextDouble()) {
+                productPrice = scanner.nextDouble();
+                if (productPrice >= 0) {
+                    productList.add(new Product(productName, productPrice));
+                    totalAmount += productPrice;
+                } else {
+                    System.out.println("Вы ввели некорректные данные цены, попробуйте заново");
+                    scanner.nextLine();
+                    continue;
+                }
+            } else {
+                System.out.println("Вы ввели некорректные данные цены, попробуйте заново");
+                scanner.nextLine();
+                continue;
+            }
+            System.out.println("Продукт " + productName + " был добавлен\nВы хотите добавить еще один товар?");
             commandText = scanner.next();
             scanner.nextLine();
 
